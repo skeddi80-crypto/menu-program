@@ -10,7 +10,7 @@ class MenuItem:
 
 def parse_menu_item(input_str: str):
     pattern = r'"([^"]+)"\s+([\d.]+)\s+(\d{2}):(\d{2})'
-    match = re.match(pattern, input_str.strip())  # .strip() добавить
+    match = re.match(pattern, input_str.strip())
     
     if not match:
         return None
@@ -23,38 +23,57 @@ def parse_menu_item(input_str: str):
     cook_time = time(hours, minutes)
     return MenuItem(name, price, cook_time)
 
+def show_menu(items):
+    """Функция для вывода меню"""
+    if not items:
+        print("\n📋 Меню пусто")
+        return
+    
+    print("\n" + "="*50)
+    print("ТЕКУЩЕЕ МЕНЮ:")
+    print("="*50)
+    for i, item in enumerate(items, 1):
+        print(f"{i:2}. {item.name:<20} | {item.price:>5.2f} руб | {item.cook_time.strftime('%H:%M')}")
+    print("="*50)
+    print(f"Всего блюд: {len(items)}")
+
 menu = []
 
-print('ВВОД МЕНЮ')
-print('='*40)
-print('Формат: "Название" цена время(чч:мм)')
-print('Пример: "Борщ украинский" 5.75 01:30')
-print('Для завершения введите: stop')
-print('='*40 + '\n')
+print('🍽️  УПРАВЛЕНИЕ МЕНЮ')
+print('='*50)
+print('1 - Добавить новое блюдо')
+print('2 - Показать всё меню')
+print('stop - Завершить работу')
+print('='*50 + '\n')
 
 while True:
-    user_input = input("Ввод: ").strip()  # .strip() добавить
-
-    if user_input.lower() == "stop":
+    print()  # Пустая строка для читаемости
+    choice = input("Выберите действие (1, 2 или stop): ").strip()
+    
+    if choice.lower() == "stop":
+        print("👋 Программа завершена")
         break
     
-    if not user_input:  # Пропускаем пустой ввод
-        continue
-
-    item = parse_menu_item(user_input)
-    if item:
-        menu.append(item)
-        print(f"Добавлено: {item.name}\n")
+    elif choice == "1":
+        print("\n--- ДОБАВЛЕНИЕ НОВОГО БЛЮДА ---")
+        print('Формат: "Название" цена время(чч:мм)')
+        print('Пример: "Борщ украинский" 5.75 01:30')
+        
+        user_input = input("Ввод: ").strip()
+        
+        if not user_input:
+            print("❌ Пустой ввод")
+            continue
+            
+        item = parse_menu_item(user_input)
+        if item:
+            menu.append(item)
+            print(f"✅ Добавлено: {item.name}")
+        else:
+            print("❌ Неверный формат")
+    
+    elif choice == "2":
+        show_menu(menu)
+    
     else:
-        print("Неверный формат. Попробуйте снова.\n")
-
-if menu:  # Проверяем, есть ли объекты
-    print("\n" + "="*40)
-    print("СФОРМИРОВАННОЕ МЕНЮ:")
-    print("="*40)
-    for i, item in enumerate(menu, 1):
-        print(f"{i:2}. {item.name:<20} | {item.price:>5.2f} руб | {item.cook_time.strftime('%H:%M')}")
-    print("="*40)
-    print(f"Всего блюд: {len(menu)}")
-else:
-    print("\nМеню пусто (ни одного блюда не добавлено)")
+        print("❌ Неверный выбор. Введите 1, 2 или stop")
