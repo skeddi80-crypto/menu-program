@@ -4,7 +4,7 @@ import tempfile
 from datetime import time
 import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-from lab3_menu import MenuItem, FileManager, Model, ValidationError, ParseError
+from lab4_menu import MenuItem, FileManager, Model, ValidationError, ParseError
 
 class TestMenuItem(unittest.TestCase):
     def setUp(self):
@@ -126,10 +126,12 @@ def run_tests():
     print("\n" + "="*50)
     if result.wasSuccessful():
         print(f"✅ ВСЕ ТЕСТЫ ПРОЙДЕНЫ! ({result.testsRun} тестов)")
+        return True
     else:
         print(f"❌ ПРОЙДЕНО: {result.testsRun - len(result.failures) - len(result.errors)}/{result.testsRun}")
-    print("="*50)
+        print("="*50)
+        return False
 
 if __name__ == "__main__":
-    run_tests()
-    input("\nНажмите Enter для выхода...")
+    result = run_tests()
+    exit(0 if result else 1)
